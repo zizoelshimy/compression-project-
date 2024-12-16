@@ -1,0 +1,51 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: url('back.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .glowing-text {
+    font-size: 2rem;
+    text-align: center;
+    animation: glow 2s infinite;
+  }
+  
+  @keyframes glow {
+    0% { text-shadow: 0 0 5px #fff, 0 0 10px #61dafb, 0 0 20px #61dafb; }
+    50% { text-shadow: 0 0 10px #fff, 0 0 30px #61dafb, 0 0 40px #61dafb; }
+    100% { text-shadow: 0 0 5px #fff, 0 0 20px #61dafb, 0 0 30px #61dafb; }
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background: #61dafb;
+    color: #282c34;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #21a1f1;
+  }
+  
+  .result-box {
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
