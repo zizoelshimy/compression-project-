@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Power of Compression</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Welcome Page -->
+  <div id="welcome-screen">
+    <h1 class="glowing-text">Welcome to the Power of Compression</h1>
+    <button id="start-button">Start the Mission</button>
+  </div>
+
+  <!-- Technique Selection Page -->
+  <div id="selection-screen" class="hidden">
+    <h2>Choose Your Compression Technique</h2>
+    <form id="compression-form">
+      <label>
+        <input type="radio" name="technique" value="RLE"> RLE
+      </label>
+      <label>
+        <input type="radio" name="technique" value="Huffman"> Huffman
+      </label>
+      <label>
+        <input type="radio" name="technique" value="Arithmetic"> Arithmetic
+      </label>
+      <label>
+        <input type="radio" name="technique" value="golomb"> Golomb
+      </label>
+      <br><br>
+      <input type="file" id="file-input" accept=".txt, .bin, .csv">
+      <br><br>
+      <button type="button" id="compress-button">Start Compression</button>
+    </form>
+    <div id="progress-bar" class="hidden">
+      <p>Compression in progress...</p>
+    </div>
+  </div>
+
+  <!-- Compression Result -->
+  <div id="result-screen" class="hidden">
+    <div class="result-box">
+      <h3>Compression Complete!</h3>
+      <p id="compression-ratio">Compression Ratio: N/A</p>
+      <p id="compressed-length">Length After Compression: N/A</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
