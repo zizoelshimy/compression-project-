@@ -220,6 +220,11 @@ def main():
                 skewness = check_skewness(data)
 
                 if skewness is not None and -0.5 <= skewness <= 0.5:
+                    if all_positive(data):
+                        print("Golomb technique is suitable for the data.")
+                        # implement golomb technique here
+                    else:
+                        print("arithmetic technique is suitable for the data.")
                     print("The data is moderately or low skewed.")
                     print("Golomb technique is suitable for the data.")
                     # implement golomb technique here
