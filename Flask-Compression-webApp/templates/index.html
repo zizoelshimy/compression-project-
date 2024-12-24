@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Analysis and Compression</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        body.loading {
+            background-color: #f0f0f0; /* Light gray background during loading */
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #333;
+             opacity: 0;
+          transform: translateY(-20px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
+          text-shadow: 0 0 10px transparent; /* Initial text-shadow to avoid layout shift */
+        }
+        h1.glowing {
+           animation: glow 2s ease-in-out infinite alternate;
+          }
+      h1.visible{
+        opacity: 1;
+           transform: translateY(0);
+      }
+
+    h3 {
+           font-size: 1.5em;
+           margin-bottom: 15px;
+           color: #555;
+             opacity: 0;
+          transform: translateY(-20px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+       h3.visible{
+         opacity: 1;
+          transform: translateY(0);
+      }
+
+        table {
+          width: 60%;
+          margin: 20px auto;
+          border-collapse: collapse;
+          opacity: 0;
+          transform: scale(0.9);
+          transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+       table.visible{
+        opacity: 1;
+          transform: scale(1);
+      }
+        table, th, td {
+          border: 1px solid #ddd;
+        }
+        th, td {
+          padding: 10px;
+          text-align: left;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px; /* Added margin to the buttons */
+            transition: background-color 0.3s ease, transform 0.1s ease;
+          }
+        button.selected {
+          background-color: #367c39; /* Darker green when selected */
+        }
+        button:hover {
+          background-color: #45a049;
+          transform: scale(1.05);
+        }
+        button:active {
+          transform: scale(0.95); /* Slightly shrink on click */
+        }
+        .file-upload {
+          margin: 20px 0;
+            opacity: 0;
+           transform: translateY(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .file-upload.visible {
+           opacity: 1;
+           transform: translateY(0);
+       }
+        .hidden {
+          display: none;
+        }
+         #compression-results {
+          margin-top: 20px;
+             text-align: left;
+         }
+        #compression-results table {
+           width: 100%;
+           margin: 20px auto;
+            border-collapse: collapse;
+        }
+         #compression-results th, #compression-results td {
+             border: 1px solid #ddd;
+             padding: 10px;
+             text-align: left;
+         }
+        .animated-text {
+          transition: all 0.5s ease-in-out;
+          opacity: 0;
+        }
+        .animated-text.visible {
+          opacity: 1;
+        }
+       .loading-indicator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            z-index: 1000;
+            font-size: 1.2em;
+       }
+    .loading-indicator::before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        margin-bottom: 10px;
+        border: 3px solid #4CAF50;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+               transform: rotate(360deg);
+             }
+       }
+    .loading-indicator.visible {
+        display: block;
+    }
+
+      @keyframes glow {
+        from {
+           text-shadow: 0 0 10px #fff; /* Initial glow color */
+
+           }
+         to {
+           text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; /* Glow color and stronger effect */
+
+        }
+    }
+     #welcome-section #welcome-image {
+        max-width: 300px;
+        margin: 20px auto;
+        display: block;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+      #welcome-section #welcome-image.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+    </style>
+</head>
+<body >
+
+  <!-- Welcome Section -->
+  <div id="welcome-section" >
+    <h1 id="welcome-title">Welcome to the Mission!</h1>
+       <p>Click below to start the file analysis process.</p>
+       <button id="start-btn" onclick="showAnalysisPage()">Start Mission</button>
+         <img src="image2.jpg" alt="image" id="welcome-image" />
+  </div>
+
+  <!-- File Analysis Section (Initially Hidden) -->
+    <div id="analysis-section" class="hidden">
+        <h1 class="section-title">File Analysis</h1>
+
+        <!-- File Upload Form -->
+        <div class="file-upload">
+            <input type="file" id="file-input" accept=".txt, .bin, .csv" required>
+            <button onclick="analyzeFile()">Analyze File</button>
+        </div>
+
+        <!-- Results Table (Initially Hidden) -->
+        <div id="results-section" class="hidden">
+            <h3 class="results-title">Analysis Results</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                 <tbody>
+                <tr>
+                   <td>Cleaned Content</td>
+                  <td id="cleaned-content"></td>
+                 </tr>
+                <tr>
+                    <td>Contains Numbers Only</td>
+                    <td id="is-numbers-only"></td>
+                </tr>
+                <tr>
+                   <td>Entropy</td>
+                   <td id="entropy"></td>
+                </tr>
+                <tr>
+                   <td>Complexity</td>
+                   <td id="complexity"></td>
+                </tr>
+                 <tr>
+                     <td>Geometric Distribution p</td>
+                     <td id="geometric-p"></td>
+                 </tr>
+                 <tr>
+                    <td>Geometric Distribution Message</td>
+                     <td id="geom-message"></td>
+                 </tr>
+                 <tr>
+                    <td>Skewness</td>
+                    <td id="skewness"></td>
+                 </tr>
+                  <tr>
+                     <td>Skewness Message</td>
+                     <td id="skew-message"></td>
+                  </tr>
+                  <tr>
+                     <td>Golomb Suitability</td>
+                     <td id="golomb-suitability"></td>
+                   </tr>
+                     <tr>
+                     <td>Best Compression Teqniue</td>
+                     <td id="best-technique-message"></td>
+                   </tr>
+                </tbody>
+            </table>
+
+            <!-- Button to go to the Compression Techniques section -->
+            <button onclick="showCompressionPage()">Go to Compression Techniques</button>
+        </div>
+    </div>
+
+
+  <!-- Compression Techniques Section (Initially Hidden) -->
+    <div id="compression-section" class="hidden">
+        <h1 class="section-title">Select Compression Technique</h1>
+        <p>Choose the compression technique you want to apply:</p>
+         <!-- File Upload Form -->
+        <div class="file-upload">
+            <input type="file" id="compression-file-input" accept=".txt, .bin, .csv" required>
+        </div>
+        <div>
+            <button class="btn" data-technique="golomb" onclick="selectTechnique(this)">Golomb Coding</button>
+            <button class="btn" data-technique="huffman" onclick="selectTechnique(this)">Huffman Coding</button>
+            <button class="btn" data-technique="rle" onclick="selectTechnique(this)">Run Length Encoding</button>
+            <button class="btn" data-technique="arithmetic" onclick="selectTechnique(this)">Arithmetic Coding</button>
+        </div>
+         <button id="compress-btn" onclick="compressFile()" disabled>Compress File</button>
+         
+        <div id="compression-results" class="hidden">
+            <h3 class="results-title">Compression Results</h3>
+            <table>
+                <thead>
+                    <tr>
+                       <th>Type</th>
+                        <th>Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Original</td>
+                       <td id="original-content-cell"><span id="original-content" class="animated-text"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Processed</td>
+                       <td id="compressed-content-cell"><span id="compressed-content" class="animated-text"></span></td>
+                    </tr>
+                     <tr id="compression-ratio-row" class="hidden">
+                        <td>Compression Ratio</td>
+                       <td id="compression-ratio-cell"><span id="compression-ratio"  class="animated-text"></span></td>
+                    </tr>
+                    <tr id="huffman-tree-row" class="hidden">
+                        <td>Huffman Tree</td>
+                       <td id="huffman-tree-cell"><span id="huffman-tree"  class="animated-text"></span></td>
+                    </tr>
+                      <tr id="m-row" class="hidden">
+                        <td>Optimal m</td>
+                       <td id="m-cell"><span id="m-value" class="animated-text"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+         <!-- File Upload Form -->
+        <div class="file-upload">
+            <input type="file" id="decompress-file-input" accept=".txt, .bin, .csv" required>
+         </div>
+        <button id="decompress-btn" onclick="decompressFile()" disabled>Decompress File</button>
+    </div>
+    <div class="loading-indicator" id="loading-indicator">Processing...</div>
+
+  <script>
+    let selectedTechnique = null;
+
+   function showLoading() {
+      document.body.classList.add('loading');
+      document.getElementById('loading-indicator').classList.add('visible');
+    }
+
+   function hideLoading() {
+        document.body.classList.remove('loading');
+       document.getElementById('loading-indicator').classList.remove('visible');
+     }
+
+
+      // Function to simulate file analysis and show results
+    function showAnalysisPage() {
+      document.getElementById('welcome-section').classList.add('hidden');
+        const welcomeTitle = document.getElementById('welcome-title');
+       const welcomeImage = document.getElementById('welcome-image');
+         setTimeout(()=> {
+           welcomeTitle.classList.add('visible');
+             welcomeImage.classList.add('visible')
+        }, 100)
+      document.getElementById('analysis-section').classList.remove('hidden');
+          const analysisTitle = document.querySelector('#analysis-section h1');
+        const analysisUpload = document.querySelector('#analysis-section .file-upload');
+         setTimeout(() => {
+              analysisTitle.classList.add('visible');
+           analysisUpload.classList.add('visible');
+          }, 200);
+    }
+
+     function analyzeFile() {
+         const fileInput = document.getElementById('file-input');
+      const file = fileInput.files[0];
+        if (file) {
+             showLoading();
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            })
+             .then(response => response.json())
+            .then(data => {
+              hideLoading();
+              if (data.error) {
+                alert('Error: ' + data.error);
+              } else {
+                 // Display results in the table
+                 document.getElementById('cleaned-content').textContent = data.cleaned_content;
+                document.getElementById('is-numbers-only').textContent = data.is_numbers_only ? "Yes" : "No";
+                document.getElementById('entropy').textContent = data.entropy;
+                document.getElementById('complexity').textContent = data.complexity;
+                document.getElementById('geometric-p').textContent = data.geometric_p !== null ? data.geometric_p : "Not analyzed";
+                 document.getElementById('geom-message').textContent = data.geometric_p !== null ? (data.geometric_p > 0.05 ? "The data is likely geometrically distributed." : "The data might not be geometrically distributed.") : "Not analyzed";
+                 document.getElementById('skewness').textContent = data.skewness !== null ? data.skewness : "Not analyzed";
+                 document.getElementById('skew-message').textContent = data.skew_message;
+                 document.getElementById('golomb-suitability').textContent = data.golomb_suitability;
+                  document.getElementById('best-technique-message').textContent = data.best_technique_message;
+                // Show the results section with fade in animations
+                 document.getElementById('results-section').classList.remove('hidden');
+                  const resultsTitle = document.querySelector('#results-section h3');
+                    const analysisTable = document.querySelector('#results-section table');
+                      setTimeout(()=>{
+                         resultsTitle.classList.add('visible');
+                         analysisTable.classList.add('visible')
+                     }, 100)
+                 }
+            })
+           .catch(error => {
+                hideLoading();
+               console.error('Error:', error);
+                alert('An error occurred during file analysis.');
+           });
+        }
+    }
+
+
+    // Function to show Compression Techniques page
+    function showCompressionPage() {
+        document.getElementById('analysis-section').classList.add('hidden');
+         document.getElementById('compression-section').classList.remove('hidden');
+        const compressionTitle = document.querySelector('#compression-section h1');
+          const compressionUpload = document.querySelector('#compression-section .file-upload');
+          setTimeout(() => {
+                compressionTitle.classList.add('visible');
+             compressionUpload.classList.add('visible')
+           }, 100)
+     }
+    
+    function selectTechnique(button) {
+      // Remove selected class from previously selected button
+        const allButtons = document.querySelectorAll('#compression-section .btn');
+        allButtons.forEach(btn => btn.classList.remove('selected'));
+        
+        // Add selected class to the clicked button
+        button.classList.add('selected');
+
+        selectedTechnique = button.dataset.technique;
+        document.getElementById('compress-btn').disabled = false;
+          document.getElementById('decompress-btn').disabled = selectedTechnique == 'rle' || selectedTechnique == 'golomb' || selectedTechnique == 'huffman' || selectedTechnique == 'arithmetic' ? false : true;
+        
+        console.log('Selected compression technique:', selectedTechnique);
+
+    }
+
+      function compressFile() {
+           if (!selectedTechnique) {
+              alert('Please select a compression technique first.');
+              return;
+           }
+
+        const fileInput = document.getElementById('compression-file-input');
+        const file = fileInput.files[0];
+
+
+        if (file) {
+            showLoading();
+            const formData = new FormData();
+            formData. append('file', file);
+            formData.append('technique', selectedTechnique)
+
+            fetch('/compress', {
+                method: 'POST',
+                body: formData,
+            })
+             .then(response => response.json())
+              .then(data => {
+                  hideLoading();
+                  if (data.error) {
+                      alert('Error: ' + data.error);
+                   } else {
+                        // Update the table cells
+                      const originalContentCell = document.getElementById('original-content-cell');
+                      const compressedContentCell = document.getElementById('compressed-content-cell');
+                        originalContentCell.innerHTML = `<span id="original-content" class="animated-text">${data.original_content}</span>`
+                       compressedContentCell.innerHTML = `<span id="compressed-content" class="animated-text">${data.processed_content}</span>`
+
+                      // Trigger animations
+                      const originalText = originalContentCell.querySelector('.animated-text')
+                      const compressedText = compressedContentCell.querySelector('.animated-text')
+
+                      setTimeout(() => {
+                        originalText.classList.add('visible')
+                        compressedText.classList.add('visible')
+
+                      }, 100);
+                      // If it is rle compression we will show the compression ratio
+                      const ratioRow = document.getElementById('compression-ratio-row')
+                      const mRow = document.getElementById('m-row')
+                      const huffmanRow = document.getElementById('huffman-tree-row')
+                      if(selectedTechnique == 'rle' && data.compression_ratio){
+                           document.getElementById('compression-ratio-cell').innerHTML = `<span id="compression-ratio" class="animated-text">${data.compression_ratio}</span>`
+                            ratioRow.classList.remove('hidden')
+                              setTimeout(() => {
+                                 document.getElementById('compression-ratio-cell').querySelector('.animated-text').classList.add('visible')
+                                }, 100);
+                        mRow.classList.add('hidden')
+                         huffmanRow.classList.add('hidden')
+                      }else if (selectedTechnique == 'golomb' && data.m)
+                       {
+                        document.getElementById('compression-ratio-cell').innerHTML = `<span id="compression-ratio" class="animated-text">${data.compression_ratio}</span>`
+                        document.getElementById('m-cell').innerHTML =  `<span id="m-value" class="animated-text">${data.m}</span>`
+
+                        ratioRow.classList.remove('hidden')
+                        mRow.classList.remove('hidden')
+                         huffmanRow.classList.add('hidden')
+                        setTimeout(() => {
+                                 document.getElementById('compression-ratio-cell').querySelector('.animated-text').classList.add('visible')
+                                 document.getElementById('m-cell').querySelector('.animated-text').classList.add('visible')
+                        }, 100);
+                       }else if(selectedTechnique == 'huffman' && data.compression_ratio && data.huffman_tree){
+                            document.getElementById('compression-ratio-cell').innerHTML = `<span id="compression-ratio" class="animated-text">${data.compression_ratio}</span>`
+                            document.getElementById('huffman-tree-cell').innerHTML = `<span id="huffman-tree" class="animated-text">${JSON.stringify(data.huffman_tree, null, 2)}</span>`
+                              ratioRow.classList.remove('hidden')
+                              huffmanRow.classList.remove('hidden')
+                             setTimeout(() => {
+                                   document.getElementById('compression-ratio-cell').querySelector('.animated-text').classList.add('visible')
+                                 document.getElementById('huffman-tree-cell').querySelector('.animated-text').classList.add('visible')
+                              }, 100);
+                             mRow.classList.add('hidden')
+                       }else if (selectedTechnique == 'arithmetic' && data.compression_ratio){
+                            document.getElementById('compression-ratio-cell').innerHTML = `<span id="compression-ratio" class="animated-text">${data.compression_ratio}</span>`
+                            ratioRow.classList.remove('hidden')
+                              setTimeout(() => {
+                                 document.getElementById('compression-ratio-cell').querySelector('.animated-text').classList.add('visible')
+                            }, 100);
+                         mRow.classList.add('hidden')
+                          huffmanRow.classList.add('hidden')
+                     }
+                      else{
+                        ratioRow.classList.add('hidden')
+                        mRow.classList.add('hidden')
+                        huffmanRow.classList.add('hidden')
+                      }
+
+
+                        document.getElementById('compression-results').classList.remove('hidden');
+                       const resultsTitle = document.querySelector('#compression-results h3');
+                        const compressionTable = document.querySelector('#compression-results table');
+                        setTimeout(() => {
+                              resultsTitle.classList.add('visible');
+                               compressionTable.classList.add('visible')
+                           }, 100)
+                        // Clear the file input value after upload
+                        document.getElementById('compression-file-input').value = '';
+                     }
+                })
+              .catch(error => {
+                    hideLoading();
+                    console.error('Error:', error);
+                    alert('An error occurred during file compression.');
+                });
+            }
+        }
+    
+
+    function decompressFile() {
+      if (selectedTechnique != 'rle' && selectedTechnique != 'golomb' && selectedTechnique != 'huffman'  && selectedTechnique != 'arithmetic') {
+          alert('Decompression is only available for RLE , Golomb, huffman and arithmetic');
+          return;
+      }
+        const fileInput = document.getElementById('compression-file-input');
+        const file = fileInput.files[0];
+      if (file) {
+          showLoading();
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('technique', selectedTechnique)
+            fetch('/decompress', {
+                method: 'POST',
+                body: formData,
+            })
+             .then(response => response.json())
+            .then(data => {
+                  hideLoading();
+              if (data.error) {
+                alert('Error: ' + data.error);
+              } else {
+                   // Update the table cells
+                  const originalContentCell = document.getElementById('original-content-cell');
+                   const compressedContentCell = document.getElementById('compressed-content-cell');
+                    originalContentCell.innerHTML = `<span id="original-content" class="animated-text">${data.original_content}</span>`
+                    compressedContentCell.innerHTML = `<span id="compressed-content" class="animated-text">${data.processed_content}</span>`
+
+                    // Trigger animations
+                   const originalText = originalContentCell.querySelector('.animated-text')
+                    const compressedText = compressedContentCell.querySelector('.animated-text')
+
+                    setTimeout(() => {
+                        originalText.classList.add('visible')
+                        compressedText.classList.add('visible')
+
+                    }, 100);
+                      const ratioRow = document.getElementById('compression-ratio-row')
+                      const mRow = document.getElementById('m-row')
+                      const huffmanRow = document.getElementById('huffman-tree-row')
+                     ratioRow.classList.add('hidden')
+                     mRow.classList.add('hidden')
+                     huffmanRow.classList.add('hidden')
+                     
+                     document.getElementById('compression-results').classList.remove('hidden');
+                    const resultsTitle = document.querySelector('#compression-results h3');
+                    const compressionTable = document.querySelector('#compression-results table');
+                      setTimeout(() => {
+                           resultsTitle.classList.add('visible');
+                            compressionTable.classList.add('visible')
+                        }, 100)
+                      // Clear the file input value after upload
+                      document.getElementById('compression-file-input').value = '';
+                }
+            })
+             .catch(error => {
+                 hideLoading();
+                console.error('Error:', error);
+                alert('An error occurred during file decompression.');
+            });
+        }
+    }
+  </script>
+
+</body>
+</html>
