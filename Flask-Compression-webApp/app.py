@@ -24,7 +24,7 @@ from file_analysis import (
     check_long_runs
 )
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 # Configure the upload folder and allowed file extensions
 UPLOAD_FOLDER = 'uploads'

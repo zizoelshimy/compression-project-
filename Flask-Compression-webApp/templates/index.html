@@ -10,90 +10,109 @@
             padding: 20px;
             text-align: center;
             transition: background-color 0.3s ease;
+            background-color: #1a1a1a;
+            color: #fff; /* White text for contrast */
         }
         body.loading {
-            background-color: #f0f0f0; /* Light gray background during loading */
+            background-color: #1a1a1a; /* Slightly lighter black during loading */
         }
         h1 {
             font-size: 2em;
             margin-bottom: 20px;
-            color: #333;
-             opacity: 0;
-          transform: translateY(-20px);
-          transition: opacity 0.5s ease, transform 0.5s ease;
-          text-shadow: 0 0 10px transparent; /* Initial text-shadow to avoid layout shift */
+            color: #fff; /* White color for h1 */
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease, text-shadow 0.5s ease;
+            text-shadow: 0 0 10px transparent;
         }
         h1.glowing {
-           animation: glow 2s ease-in-out infinite alternate;
-          }
-      h1.visible{
-        opacity: 1;
-           transform: translateY(0);
-      }
-
-    h3 {
-           font-size: 1.5em;
-           margin-bottom: 15px;
-           color: #555;
-             opacity: 0;
-          transform: translateY(-20px);
-          transition: opacity 0.5s ease, transform 0.5s ease;
+           animation: textGlow 1.5s ease-in-out infinite alternate;
         }
-       h3.visible{
-         opacity: 1;
-          transform: translateY(0);
-      }
-
+        h1.visible {
+            opacity: 1;
+            transform: translateY(0);
+            text-shadow: 0 0 5px cyan;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #ddd; /* Slightly lighter white for h3 */
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s ease, transform 0.5s ease, text-shadow 0.5s ease;
+            text-shadow: 0 0 10px transparent;
+        }
+        h3.visible {
+            opacity: 1;
+            transform: translateY(0);
+            text-shadow: 0 0 5px cyan;
+        }
+        p {
+           transform: translateY(-20px);
+           transition: opacity 0.5s ease, transform 0.5s ease, text-shadow 0.5s ease;
+            text-shadow: 0 0 10px transparent;
+            color: #fff; /* White color for p */
+        }
+        p.visible {
+            opacity: 1;
+            transform: translateY(0);
+           text-shadow: 0 0 5px cyan;
+        }
+         p.glowing {
+           animation: textGlow 1.5s ease-in-out infinite alternate;
+        }
         table {
-          width: 60%;
-          margin: 20px auto;
-          border-collapse: collapse;
-          opacity: 0;
-          transform: scale(0.9);
-          transition: opacity 0.5s ease, transform 0.5s ease;
+            width: 60%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
-       table.visible{
-        opacity: 1;
-          transform: scale(1);
-      }
+        table.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
         table, th, td {
-          border: 1px solid #ddd;
+            border: 1px solid #555; /* Darker border for black background */
         }
         th, td {
-          padding: 10px;
-          text-align: left;
+            padding: 10px;
+            text-align: left;
         }
         button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
+            background-color: cyan;
+            color: black;
             border: none;
             border-radius: 5px;
-            margin: 5px; /* Added margin to the buttons */
-            transition: background-color 0.3s ease, transform 0.1s ease;
-          }
+            margin: 5px;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+           box-shadow: 0 0 5px transparent;
+        }
         button.selected {
-          background-color: #367c39; /* Darker green when selected */
+            background-color: rgb(6, 123, 132);
         }
         button:hover {
-          background-color: #45a049;
-          transform: scale(1.05);
+            background-color: rgb(19, 139, 146);
+            transform: scale(1.05);
+            box-shadow: 0 0 10px cyan;
         }
         button:active {
-          transform: scale(0.95); /* Slightly shrink on click */
+            transform: scale(0.95);
         }
         .file-upload {
-          margin: 20px 0;
+            margin: 20px 0;
             opacity: 0;
-           transform: translateY(-20px);
+            transform: translateY(-20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
         .file-upload.visible {
-           opacity: 1;
-           transform: translateY(0);
-       }
+            opacity: 1;
+            transform: translateY(0);
+        }
         .hidden {
           display: none;
         }
@@ -107,18 +126,21 @@
             border-collapse: collapse;
         }
          #compression-results th, #compression-results td {
-             border: 1px solid #ddd;
+             border: 1px solid #555;
              padding: 10px;
              text-align: left;
          }
         .animated-text {
-          transition: all 0.5s ease-in-out;
-          opacity: 0;
+            transition: all 0.5s ease-in-out, text-shadow 0.5s ease;
+            opacity: 0;
+            text-shadow: 0 0 10px transparent;
+             color: #fff; /* White color for animated text */
         }
         .animated-text.visible {
-          opacity: 1;
+            opacity: 1;
+            text-shadow: 0 0 5px cyan;
         }
-       .loading-indicator {
+        .loading-indicator {
             display: none;
             position: fixed;
             top: 50%;
@@ -131,16 +153,16 @@
             z-index: 1000;
             font-size: 1.2em;
        }
-    .loading-indicator::before {
-        content: '';
-        display: block;
-        width: 20px;
-        height: 20px;
-        margin-bottom: 10px;
-        border: 3px solid #4CAF50;
-        border-top-color: transparent;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
+        .loading-indicator::before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            margin-bottom: 10px;
+            border: 3px solid cyan;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
       }
         @keyframes spin {
             0% {
@@ -150,48 +172,44 @@
                transform: rotate(360deg);
              }
        }
-    .loading-indicator.visible {
-        display: block;
-    }
-
-      @keyframes glow {
-        from {
-           text-shadow: 0 0 10px #fff; /* Initial glow color */
-
-           }
-         to {
-           text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; /* Glow color and stronger effect */
-
+        .loading-indicator.visible {
+            display: block;
         }
-    }
-     #welcome-section #welcome-image {
-        max-width: 300px;
-        margin: 20px auto;
-        display: block;
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.5s ease, transform 0.5s ease;
-      }
-      #welcome-section #welcome-image.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
+        @keyframes textGlow {
+            from {
+                text-shadow: 0 0 5px cyan;
+            }
+            to {
+                text-shadow: 0 0 10px cyan, 0 0 15px cyan;
+            }
+        }
+        #welcome-section #welcome-image {
+            max-width: 500px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        #welcome-section #welcome-image.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
-<body >
+<body>
 
   <!-- Welcome Section -->
   <div id="welcome-section" >
-    <h1 id="welcome-title">Welcome to the Mission!</h1>
-       <p>Click below to start the file analysis process.</p>
+    <h1 id="welcome-title" class="glowing">Welcome to the Mission!</h1>
+      <p id="welcome-message" class="glowing">Click below to start the file analysis process.</p>
        <button id="start-btn" onclick="showAnalysisPage()">Start Mission</button>
-         <img src="image2.jpg" alt="image" id="welcome-image" />
+       <img src="static\image.jpg" alt="image" id="welcome-image" />
   </div>
 
   <!-- File Analysis Section (Initially Hidden) -->
     <div id="analysis-section" class="hidden">
-        <h1 class="section-title">File Analysis</h1>
+        <h1 class="section-title glowing">File Analysis</h1>
 
         <!-- File Upload Form -->
         <div class="file-upload">
@@ -201,7 +219,7 @@
 
         <!-- Results Table (Initially Hidden) -->
         <div id="results-section" class="hidden">
-            <h3 class="results-title">Analysis Results</h3>
+            <h3 class="results-title glowing">Analysis Results</h3>
             <table>
                 <thead>
                 <tr>
@@ -261,8 +279,8 @@
 
   <!-- Compression Techniques Section (Initially Hidden) -->
     <div id="compression-section" class="hidden">
-        <h1 class="section-title">Select Compression Technique</h1>
-        <p>Choose the compression technique you want to apply:</p>
+        <h1 class="section-title glowing">Select Compression Technique</h1>
+        <p class="glowing">Choose the compression technique you want to apply:</p>
          <!-- File Upload Form -->
         <div class="file-upload">
             <input type="file" id="compression-file-input" accept=".txt, .bin, .csv" required>
@@ -271,12 +289,12 @@
             <button class="btn" data-technique="golomb" onclick="selectTechnique(this)">Golomb Coding</button>
             <button class="btn" data-technique="huffman" onclick="selectTechnique(this)">Huffman Coding</button>
             <button class="btn" data-technique="rle" onclick="selectTechnique(this)">Run Length Encoding</button>
-            <button class="btn" data-technique="arithmetic" onclick="selectTechnique(this)">Arithmetic Coding</button>
+              <button class="btn" data-technique="arithmetic" onclick="selectTechnique(this)">Arithmetic Coding</button>
         </div>
          <button id="compress-btn" onclick="compressFile()" disabled>Compress File</button>
          
         <div id="compression-results" class="hidden">
-            <h3 class="results-title">Compression Results</h3>
+            <h3 class="results-title glowing">Compression Results</h3>
             <table>
                 <thead>
                     <tr>
@@ -334,9 +352,11 @@
     function showAnalysisPage() {
       document.getElementById('welcome-section').classList.add('hidden');
         const welcomeTitle = document.getElementById('welcome-title');
+        const welcomeMessage = document.getElementById('welcome-message');
        const welcomeImage = document.getElementById('welcome-image');
          setTimeout(()=> {
            welcomeTitle.classList.add('visible');
+            welcomeMessage.classList.add('visible');
              welcomeImage.classList.add('visible')
         }, 100)
       document.getElementById('analysis-section').classList.remove('hidden');
@@ -402,9 +422,11 @@
          document.getElementById('compression-section').classList.remove('hidden');
         const compressionTitle = document.querySelector('#compression-section h1');
           const compressionUpload = document.querySelector('#compression-section .file-upload');
+        const compressionMessage = document.querySelector('#compression-section p');
           setTimeout(() => {
                 compressionTitle.classList.add('visible');
-             compressionUpload.classList.add('visible')
+             compressionUpload.classList.add('visible');
+               compressionMessage.classList.add('visible');
            }, 100)
      }
     

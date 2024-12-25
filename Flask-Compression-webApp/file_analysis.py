@@ -232,7 +232,6 @@ def main():
         alphabet_info = analyze_alphabet_size(alphanumeric_data)
         print(f"Alphabet Size: {alphabet_info['alphabet_size']}")
         print(f"Classification: {alphabet_info['classification']}")
-    
         result = calculate_text_entropy(alphanumeric_data)
         print(f"Entropy: {result['entropy']:.2f}")
         print(f"Complexity: {result['complexity']}")

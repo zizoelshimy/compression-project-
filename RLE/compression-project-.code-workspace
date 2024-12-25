@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"name": "compression-project-",
+		"path": ".."
+	},
+	{
+		"name": "Flask-Compression-webApp",
+		"path": "../../../project compression/Flask-Compression-webApp"
+	}
+],
+  "settings": {}
+}
